@@ -133,36 +133,34 @@ public class TagListView: UIView {
         rowViews.removeAll(keepCapacity: true)
 
         var currentRow = 0
-        var currentRowView: UIView!
         var currentRowTagCount = 0
         var currentRowWidth: CGFloat = 0
+        var currentRowView: UIView!
         for tagView in tagViews {
             tagView.frame.size = tagView.intrinsicContentSize()
             tagViewHeight = tagView.frame.height
             
-            if currentRowTagCount == 0 || currentRowWidth + tagView.frame.width + marginX > frame.width {
+            if currentRow == 0 || currentRowWidth + tagView.frame.width + marginX > frame.width {
                 currentRow += 1
+                currentRowWidth = 0
+                currentRowTagCount = 0
                 currentRowView = UIView()
-                currentRowView.frame.size.height = tagViewHeight
-                addSubview(currentRowView)
-                tagView.frame.origin.x = 0
-                tagView.frame.origin.y = 0
                 currentRowView.frame.origin.y = CGFloat(currentRow - 1) * (tagViewHeight + marginY)
-                currentRowTagCount = 1
-                currentRowWidth = tagView.frame.width + marginX
+                rowViews.append(currentRowView)
+                addSubview(currentRowView)
             }
-            else {
-                tagView.frame.origin.x = currentRowWidth
-                tagView.frame.origin.y = 0
-                
-                currentRowTagCount += 1
-                currentRowWidth += tagView.frame.width + marginX
-            }
-            
-            currentRowView.frame.size.width = currentRowWidth
-            currentRowView.frame.origin.x = (frame.size.width - currentRowWidth) / 2
+
+            tagView.frame.origin = CGPoint(x: currentRowWidth, y: 0)
+
             currentRowView.addSubview(tagView)
+            currentRowTagCount++
+            currentRowWidth += tagView.frame.width + marginX
+
+            currentRowView.frame.origin.x = (frame.size.width - (currentRowWidth - marginX)) / 2
+            currentRowView.frame.size.width = currentRowWidth
+            currentRowView.frame.size.height = max(tagViewHeight, currentRowView.frame.size.height)
         }
+
         rows = currentRow
     }
     
