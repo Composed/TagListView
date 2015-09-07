@@ -27,9 +27,19 @@ public class TagView: UIButton {
             layer.borderColor = borderColor?.CGColor
         }
     }
+    @IBInspectable var highlightedBorderColor: UIColor? {
+        didSet {
+            layer.borderColor = borderColor?.CGColor
+        }
+    }
     @IBInspectable var textColor: UIColor = UIColor.whiteColor() {
         didSet {
             setTitleColor(textColor, forState: UIControlState.Normal)
+        }
+    }
+    @IBInspectable var highlightedTextColor: UIColor = UIColor.whiteColor() {
+        didSet {
+            setTitleColor(highlightedTextColor, forState: UIControlState.Highlighted)
         }
     }
     @IBInspectable var paddingY: CGFloat = 2 {
@@ -73,7 +83,13 @@ public class TagView: UIButton {
             }
         }
     }
-    
+
+    override public var highlighted: Bool {
+        didSet {
+            layer.borderColor = highlighted ? highlightedBorderColor?.CGColor : borderColor?.CGColor
+        }
+    }
+
     /// Handles Tap (TouchUpInside)
     public var onTap: ((TagView) -> Void)?
     

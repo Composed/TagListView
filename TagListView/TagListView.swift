@@ -23,6 +23,14 @@ public class TagListView: UIView {
         }
     }
 
+    @IBInspectable public var highlightedTextColor: UIColor = UIColor.whiteColor() {
+        didSet {
+            for tagView in tagViews {
+                tagView.highlightedTextColor = highlightedTextColor
+            }
+        }
+    }
+
     @IBInspectable public var tagBackgroundColor: UIColor = UIColor.grayColor() {
         didSet {
             for tagView in tagViews {
@@ -57,6 +65,13 @@ public class TagListView: UIView {
         didSet {
             for tagView in tagViews {
                 tagView.borderColor = borderColor
+            }
+        }
+    }
+    @IBInspectable public var highlightedBorderColor: UIColor? {
+        didSet {
+            for tagView in tagViews {
+                tagView.highlightedBorderColor = highlightedBorderColor
             }
         }
     }
@@ -178,11 +193,13 @@ public class TagListView: UIView {
         let tagView = TagView(title: title)
         
         tagView.textColor = textColor
+        tagView.highlightedTextColor = highlightedTextColor
         tagView.tagBackgroundColor = tagBackgroundColor
         tagView.tagSelectedBackgroundColor = tagSelectedBackgroundColor
         tagView.cornerRadius = cornerRadius
         tagView.borderWidth = borderWidth
         tagView.borderColor = borderColor
+        tagView.highlightedBorderColor = highlightedBorderColor
         tagView.paddingY = paddingY
         tagView.paddingX = paddingX
         tagView.textFont = textFont
