@@ -22,7 +22,7 @@ public class TagListView: UIView {
             }
         }
     }
-    
+
     @IBInspectable public var tagBackgroundColor: UIColor = UIColor.grayColor() {
         didSet {
             for tagView in tagViews {
@@ -38,7 +38,7 @@ public class TagListView: UIView {
             }
         }
     }
-    
+
     @IBInspectable public var cornerRadius: CGFloat = 0 {
         didSet {
             for tagView in tagViews {
@@ -98,6 +98,7 @@ public class TagListView: UIView {
     @IBOutlet public var delegate: TagListViewDelegate?
     
     var tagViews: [TagView] = []
+    var rowViews: [UIView] = []
     var tagViewHeight: CGFloat = 0
     var rows = 0 {
         didSet {
@@ -125,8 +126,14 @@ public class TagListView: UIView {
         for tagView in tagViews {
             tagView.removeFromSuperview()
         }
-        
+
+        for rowView in rowViews {
+            rowView.removeFromSuperview()
+        }
+        rowViews.removeAll(keepCapacity: true)
+
         var currentRow = 0
+        var currentRowView: UIView!
         var currentRowTagCount = 0
         var currentRowWidth: CGFloat = 0
         for tagView in tagViews {
@@ -135,21 +142,26 @@ public class TagListView: UIView {
             
             if currentRowTagCount == 0 || currentRowWidth + tagView.frame.width + marginX > frame.width {
                 currentRow += 1
+                currentRowView = UIView()
+                currentRowView.frame.size.height = tagViewHeight
+                addSubview(currentRowView)
                 tagView.frame.origin.x = 0
-                tagView.frame.origin.y = CGFloat(currentRow - 1) * (tagViewHeight + marginY)
-                
+                tagView.frame.origin.y = 0
+                currentRowView.frame.origin.y = CGFloat(currentRow - 1) * (tagViewHeight + marginY)
                 currentRowTagCount = 1
                 currentRowWidth = tagView.frame.width + marginX
             }
             else {
                 tagView.frame.origin.x = currentRowWidth
-                tagView.frame.origin.y = CGFloat(currentRow - 1) * (tagViewHeight + marginY)
+                tagView.frame.origin.y = 0
                 
                 currentRowTagCount += 1
                 currentRowWidth += tagView.frame.width + marginX
             }
             
-            addSubview(tagView)
+            currentRowView.frame.size.width = currentRowWidth
+            currentRowView.frame.origin.x = (frame.size.width - currentRowWidth) / 2
+            currentRowView.addSubview(tagView)
         }
         rows = currentRow
     }
@@ -176,7 +188,7 @@ public class TagListView: UIView {
         tagView.paddingY = paddingY
         tagView.paddingX = paddingX
         tagView.textFont = textFont
-        
+
         tagView.addTarget(self, action: "tagPressed:", forControlEvents: UIControlEvents.TouchUpInside)
         
         return addTagView(tagView)
