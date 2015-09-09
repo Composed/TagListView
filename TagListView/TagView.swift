@@ -95,6 +95,12 @@ public class TagView: UIButton {
     
     // MARK: - init
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        setupView()
+    }
+    
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
@@ -115,7 +121,7 @@ public class TagView: UIButton {
     // MARK: - layout
     
     override public func intrinsicContentSize() -> CGSize {
-        var size = titleLabel?.text?.sizeWithAttributes([NSFontAttributeName: textFont]) ?? CGSizeZero
+        var size = titleLabel?.text?.sizeWithAttributes([NSFontAttributeName: titleLabel!.font]) ?? CGSizeZero
         
         size.height = textFont.pointSize + paddingY * 2
         size.width += paddingX * 2
